@@ -2,6 +2,8 @@ package com.generation.lojagames.MODEL;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -20,6 +22,25 @@ public class Produto {
     @Size(min = 10, max = 200, message = "A descrição do produto não pode ser menor que 3 caracteres e maior que 100")
     private String descricao;
     private BigDecimal preco;
+    @ManyToOne
+    @JsonIgnoreProperties("produto")
+    private Categoria categoria ;
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
 
     public BigDecimal getPreco() {
         return preco;
@@ -43,14 +64,6 @@ public class Produto {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public String getDesc() {
-        return descricao;
-    }
-
-    public void setDesc(String desc) {
-        this.descricao = desc;
     }
 
 }

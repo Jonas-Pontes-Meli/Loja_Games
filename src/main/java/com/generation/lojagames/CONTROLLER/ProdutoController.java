@@ -1,0 +1,75 @@
+package com.generation.lojagames.CONTROLLER;
+
+import com.generation.lojagames.MODEL.Produto;
+import com.generation.lojagames.REPOSITORY.ProdutoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("produto")
+public class ProdutoController {
+    @Autowired
+    private ProdutoRepository produtoRepository;
+    @GetMapping
+    public ResponseEntity<List<Produto>> getProduto()
+    {
+        return ResponseEntity.ok(produtoRepository.findAll()) ;
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<Produto> getProdutoById(@PathVariable Long id)
+    {
+        return produtoRepository.findById(id)
+                .map(resposta -> ResponseEntity.ok(resposta))
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build()) ;
+    }
+    @GetMapping("titulo/{titulo}")
+    public ResponseEntity<List<Produto>> getProdutoByName(@PathVariable String titulo)
+    {
+        return ResponseEntity.ok(produtoRepository.findAllByNomeContainingIgnoreCase(titulo));
+    }
+    @PostMapping
+    public ResponseEntity postProduto(@Valid @RequestBody Produto produto)
+    {
+        return ResponseEntity.status(HttpStatus.CREATED).body(produtoRepository.save(produto));
+
+    }
+    @PutMapping
+    public ResponseEntity putProduto(@Valid @RequestBody Produto produto)
+    {
+        return produtoRepository.findById(produto.getId())
+                .map(resposta -> ResponseEntity.status(HttpStatus.OK).body(produtoRepository.save(produto)))
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+
+    }
+    @DeleteMapping("/{id}")
+    public void deletarProduto (@PathVariable Long id)
+    {
+        Optional<Produto> produto = produtoRepository.findById(id);
+
+        if(produto.isEmpty())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            produtoRepository.deleteById(id);
+
+
+
+    }
+    @GetMapping("precomenor/{valor}")
+    public ResponseEntity<List<Produto>> getProdutoByPrecoMenor(@PathVariable BigDecimal valor)
+    {
+        return ResponseEntity.ok(produtoRepository.findAllByPrecoIs(valor));
+    }
+    @GetMapping("precomaior/{valor}")
+    public ResponseEntity<List<Produto>> getProdutoByPrecoMaior(@PathVariable BigDecimal valor)
+    {
+        return ResponseEntity.ok(produtoRepository.findAllByPrecoIs(valor));
+    }
+
+}
