@@ -15,6 +15,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("produto")
+@CrossOrigin(origins = "*",allowedHeaders = "*")
 public class ProdutoController {
     @Autowired
     private ProdutoRepository produtoRepository;
@@ -69,7 +70,12 @@ public class ProdutoController {
     @GetMapping("precomaior/{valor}")
     public ResponseEntity<List<Produto>> getProdutoByPrecoMaior(@PathVariable BigDecimal valor)
     {
-        return ResponseEntity.ok(produtoRepository.findAllByPrecoIs(valor));
+        return ResponseEntity.ok(produtoRepository.findAllByPrecoIsM(valor));
+    }
+    @PostMapping ("/precointervalo")
+    public ResponseEntity<List<Produto>> getProdutoByBetween(@RequestParam BigDecimal[] list)
+    {
+        return ResponseEntity.ok(produtoRepository.findAllByPrecoIsB(list[0] ,list[1]));
     }
 
 }

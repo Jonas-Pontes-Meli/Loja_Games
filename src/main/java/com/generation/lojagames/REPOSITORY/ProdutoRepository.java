@@ -13,5 +13,9 @@ public interface ProdutoRepository extends JpaRepository<Produto,Long>{
 
     @Query("select e from Produto e where e.preco < :preco")
     List<Produto> findAllByPrecoIs(@Param("preco") BigDecimal preco);
+    @Query("select e from Produto e where e.preco > :preco")
+    List<Produto> findAllByPrecoIsM(@Param("preco") BigDecimal preco);
+    @Query("select e from Produto e where e.preco between :valorInicial and :valorFinal")
+    List<Produto> findAllByPrecoIsB(@Param("valorInicial") BigDecimal valorInicial ,@Param("valorFinal") BigDecimal valorFinal);
 
 }
