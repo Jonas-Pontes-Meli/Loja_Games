@@ -50,18 +50,6 @@ public class ProdutoController {
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 
     }
-    @DeleteMapping("/{id}")
-    public void deletarProduto (@PathVariable Long id)
-    {
-        Optional<Produto> produto = produtoRepository.findById(id);
-
-        if(produto.isEmpty())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-            produtoRepository.deleteById(id);
-
-
-
-    }
     @GetMapping("precomenor/{valor}")
     public ResponseEntity<List<Produto>> getProdutoByPrecoMenor(@PathVariable BigDecimal valor)
     {
